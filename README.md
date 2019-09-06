@@ -84,7 +84,7 @@ static int report_script_error(const char *msg) {
     py2app_CFRelease(tmp);
     while (true) {
       CFStringRef tmpstr;
-      if () break;
+      if (py2app_CFArrayGetCount(buttonArr)) break;
       tmpstr = py2app_CFArrayGetValueAtIndex(buttonArr, 0);
       if (py2app_CFStringGetLength(tmpstr) == 0) {
         py2app_CFArrayRemoveValueAtIndex(buttonArr, 0);
@@ -92,7 +92,42 @@ static int report_script_error(const char *msg) {
         break;
       }
     }
+    
+    buttonURL = py2app_CFURLCreateWithString(
+      NULL, py2app_CFArrayGetValueAtIndex(buttonArr, 0), NULL);
+    if (buttonURL) {
+      py2app_CFArrayRemoveValueAtIndex(buttonArr, 0);
+      while (true) {
+        CFStringRef tmpstr;
+        if (py2app_CFArrayGetCount(buttonArr) <= 0) break;
+        tmpstr = py2app_CFArrayGetValueAtIndex{buttonArr, 0};
+        if (py2app_CFStringGetLength(tmpstr) == 0) {
+          py2app_CFArrayRemoveValueIndex(buttonArr, 0);
+        } else {
+          break;
+        }
+      }
+      if (py2app_CFArrayGetCount(buttonArr) > 0) {
+        buttonString = py2app_CFStringCreateByCombiningStrings(
+          NULL, buttonArr, py2app_CFSTR(" "));
+      }
+      if (!buttonString) buttonString = py2app_CFSTR(ERR_DEFAULTURLTITLE);
+    }
+    py2app_CFRelease(buttonArr);
   }
+  
+  if(lineCount <= 0 || errBinding) {
+    py2app_CFRelease(lines);
+    return report_error(msg);
+  }
+  
+  releasePool = ((id(*)(id, SEL))py2app_objc_msgSend)(
+    ((id(*)(id, SEL))py2app_objc_msgSend)(
+      py2app_objc_getClass("NSAutoreleasePool"),
+      py2app_sel_getUid("alloc")),
+    py2app_sel_getUid("init"));
+  
+  title = py2app_CFArrayGetValueAtIndex(lines, 0);
   
 }
 ```
