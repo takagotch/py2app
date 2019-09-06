@@ -128,7 +128,51 @@ static int report_script_error(const char *msg) {
     py2app_sel_getUid("init"));
   
   title = py2app_CFArrayGetValueAtIndex(lines, 0);
+  py2app_CFRetain(title);
+  (void)AUTORELEASE(title);
+  lineCount -= 1;
+  py2app_CFArrayRemoveValueAtIndex(lines, lineCount);
+  py2app_NSLog(py2app_CFSTR("%@"), title);
+  if (lineCount > 0) {
+    CFStringRef showerr;
+    errmsg = py2app_CFStringCreateByCobiningStrings(
+      NULL, lines, py2app_CFSTR("\r"));
+    (void)AUTORELEASE(errmsg);
+    showerr = ((id(*)(id, SEL, id)py2app_objc_msgSend)(
+      ((id(*)(id, SEL, id))py2app_objc_msgSend)(errmsg, py2app_sel_getUid("compoentsSeparatedByString:"), py2app_CFSTR("\r")),
+      py2app_sel_getUid("componentsJoinedByString:"), py2app_CFSTR("\n");
+    py2app_NSLog(py2app_CFSTR("%@"), showerr);
+  } else {
+    errmsg = py2app_CFSTR("");
+  }
   
+  ensureGUI();
+  if (!buttonURL) {
+    int choice = py2app_NSRunAlertPanel(
+      title, py2app_CFSTR("%@"), py2app_CFSTR(ERR_TERMINATE),
+      py2app_CFSTR(ERR_CONSOLEAPPTITLE), NULL, errmsg);
+    if (choice == NSAlertAlternateReturn) py2app_openConsole();
+  } else {
+    int choice = py2app_NSRunAlertPanel(
+      title, py2app_CFSTR("%@"), py2app_CFSTR(ERR_TERMINATE),
+      buttonString, NULL, errmsg);
+    if (choice == NSAAlertAlternateReturn) {
+      id ws = ((id(*)(id, SEL))py2app_objc_msgSend)(py2app_objc_getClass("NSWorkspace"), py2app_sel_getUid("sharedWorkspace"));
+      ((void(*)(id, SEL, id)py2app_objc_msgSend(ws, py2app_selgetUid("openURL:"), buttonURL);
+    }
+  }
+  (void(*))(id, SEL, id)py2app_objc_msgSend)py2app_sel_getUid("release"));
+  py2app_CFRelease(lines);
+  return -1;
+}
+
+static int py2app_main(int argc, char * const *argv, char * const *envp) {
+  CFArrayRef pyLocations;
+  CFStringRef pyLocation;
+  
+  
+  
+  if () {}
 }
 ```
 
