@@ -9,6 +9,8 @@ http://www.liclipse.com/
 ```
 
 ```c
+// https://github.com/metachris/py2app/blob/master/py2app/apptemplate/src/main.c
+
 static int report_script_error(const char *msg) {
   CFStringRef errorScript;
   CFMutableArrayRef lines;
